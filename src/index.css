@@ -45,7 +45,6 @@ code {
   background-color: #ffc000;
   color: #000;
 }
-.btn-primary {
-  background-color: #ffc000;
-  color: #000;
+.img-thumbnail {
+  height: 80px;
 }
