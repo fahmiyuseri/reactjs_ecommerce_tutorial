@@ -11,7 +11,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Stack from "react-bootstrap/Stack";
 
-export default function CartScreen() {
+export default function CartBody() {
   const navigate = useNavigate();
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { cart } = state;
@@ -53,10 +53,8 @@ export default function CartScreen() {
   };
   return (
     <div>
-      <Helmet>Shopping Cart</Helmet>
-      <h1>Shopping Cart</h1>
       <Row>
-        <Col md={8}>
+        <Col>
           {cart.cartItems.length === 0 ? (
             <MessageBox>
               Card is empty.<Link to='/'>Go to Shopping Link</Link>
@@ -110,37 +108,33 @@ export default function CartScreen() {
             </ListGroup>
           )}
         </Col>
-        <Col md={4}>
-          <Card>
-            <Card.Body>
-              <ListGroup variant='flush'>
-                <ListGroupItem>
-                  <h3>
-                    Subtotal (
-                    {cart.cartItems.reduce((a, c) => a + c.quantity, 0)} items):
-                    RM
-                    {cart.cartItems.reduce(
-                      (a, c) => a + c.price * c.quantity,
-                      0
-                    )}
-                  </h3>
-                </ListGroupItem>
-                <ListGroupItem>
-                  <div className='d-grid'>
-                    <Button
-                      variant='primary'
-                      style={{ marginTop: 10 }}
-                      onClick={checkoutHandler}
-                    >
-                      Proceed To Checkout
-                    </Button>{" "}
-                  </div>
-                </ListGroupItem>
-              </ListGroup>
-            </Card.Body>
-          </Card>
-        </Col>
       </Row>
+      <Col>
+        <Card>
+          <Card.Body>
+            <ListGroup variant='flush'>
+              <ListGroupItem>
+                <h3>
+                  Subtotal ({cart.cartItems.reduce((a, c) => a + c.quantity, 0)}{" "}
+                  items): RM
+                  {cart.cartItems.reduce((a, c) => a + c.price * c.quantity, 0)}
+                </h3>
+              </ListGroupItem>
+              <ListGroupItem>
+                <div className='d-grid'>
+                  <Button
+                    variant='primary'
+                    style={{ marginTop: 10 }}
+                    onClick={checkoutHandler}
+                  >
+                    Proceed To Checkout
+                  </Button>{" "}
+                </div>
+              </ListGroupItem>
+            </ListGroup>
+          </Card.Body>
+        </Card>
+      </Col>{" "}
     </div>
   );
 }

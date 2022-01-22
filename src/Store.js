@@ -8,9 +8,18 @@ const initialState = {
       ? JSON.parse(localStorage.getItem("cartItems"))
       : [],
   },
+  show: false,
 };
 const reducer = (state, action) => {
   switch (action.type) {
+    case "TOOGLE_SHOW": {
+      console.log(action.payload.show);
+      return { ...state, show: action.payload.show };
+    }
+    case "TOOGLE_CLOSE": {
+      console.log(action.payload.show);
+      return { ...state, show: true };
+    }
     case "CART_ADD_ITEM": {
       const newItem = action.payload;
       const existItem = state.cart.cartItems.find(

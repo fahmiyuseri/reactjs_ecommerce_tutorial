@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Offcanvas from "react-bootstrap/Offcanvas";
 import logger from "use-reducer-logger";
 import Product from "../components/Product";
 import { Helmet } from "react-helmet-async";
@@ -41,6 +42,10 @@ function HomeScreen() {
     };
     fetchData();
   }, []);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const toggleShow = () => setShow((s) => !s);
   return (
     <div>
       <Helmet>
