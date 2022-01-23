@@ -1,4 +1,10 @@
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Link,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import "./App.css";
 import data from "./data";
 import HomeScreen from "./screen/HomeScreen";
@@ -16,10 +22,10 @@ import SignInScreen from "./screen/SigninScreen";
 import { Button } from "react-bootstrap";
 import CartBody from "./screen/CartBody";
 import { useDispatch, useSelector } from "react-redux";
-
 function App() {
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
+  const userSignin = useSelector((state) => state.userSignin);
 
   console.log(cart);
   //const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -36,6 +42,7 @@ function App() {
       payload: { show: false },
     });
   };
+
   return (
     <BrowserRouter>
       <div className='d-flex flex-column site-container'>
@@ -45,14 +52,22 @@ function App() {
               <LinkContainer to='/'>
                 <Navbar.Brand>amazonn</Navbar.Brand>
               </LinkContainer>
-              <Nav className='me-auto'>
-                <Button onClick={toogleShow} className='nav-link'>
-                  Cart
-                  <Badge pill bg='danger'>
-                    {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
-                  </Badge>
-                  {}
-                </Button>
+              <Nav className='justify-content-end'>
+                <Nav.Item>
+                  <Nav.Link onClick={toogleShow}>
+                    Cart
+                    <Badge pill bg='danger'>
+                      {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
+                    </Badge>
+                  </Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  {userSignin.userInfo ? (
+                    <Nav.Link>{userSignin.userInfo.name}</Nav.Link>
+                  ) : (
+                    <Nav.Link href='/signin'>Login</Nav.Link>
+                  )}
+                </Nav.Item>
               </Nav>
             </Container>
           </Navbar>
