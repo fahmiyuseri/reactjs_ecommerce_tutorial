@@ -14,56 +14,41 @@ import MessageBox from "../components/MessageBox";
 import LoadingBox from "../components/LoadingBox";
 import { getError } from "../components/utils";
 import { Store } from "../Store";
+import { useDispatch, useSelector } from "react-redux";
+import { singleProduct } from "../action/productAction";
+import { addToCart } from "../action/cartActions";
 
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "FETCH_REQUEST":
-      return { ...state, loading: true };
-    case "FETCH_SUCCESS":
-      return { ...state, product: action.payload, loading: false };
-    case "FETCH_FAIL":
-      return { ...state, loading: false, error: action.payload };
-    default:
-      return state;
-  }
-};
 export default function ProductScreen() {
-  const [{ loading, error, product }, dispatch] = useReducer(logger(reducer), {
-    loading: true,
-    error: "",
-    products: [],
-  });
-  // const [products, setProducts] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      dispatch({ type: "FETCH_REQUEST" });
-      try {
-        const result = await axios.get(`/api/products/slug/${slug}`);
-        dispatch({ type: "FETCH_SUCCESS", payload: result.data });
-      } catch (err) {
-        dispatch({ type: "FETCH_FAIL", payload: getError(err) });
-      }
-    };
-    fetchData();
-  }, []);
+  //Get data from redux
+  const dispatch = useDispatch();
+  const productDetail = useSelector((state) => state.productDetail);
+  const { loading, error, products } = productDetail;
+  const cart = useSelector((state) => state.cart);
 
   const params = useParams();
   const { slug } = params;
-  const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { cart } = state;
+  // const [products, setProducts] = useState([]);
+  useEffect(() => {
+    dispatch(singleProduct(slug));
+  }, [dispatch]);
+  console.log(productDetail);
+  // const { state, dispatch: ctxDispatch } = useContext(Store);
+  // const { cart } = state;
   const addToCartHandler = async () => {
-    const existItem = cart.cartItems.find((x) => x._id === product._id);
-    const quantity = existItem ? existItem.quantity + 1 : 1;
-    const { data } = await axios.get(`/api/products/${product._id}`);
-    console.log(data);
-    if (data.countStock < quantity) {
-      window.alert("Sorry. Product is out of stock");
-      return;
-    }
-    ctxDispatch({
-      type: "CART_ADD_ITEM",
-      payload: { ...product, quantity: quantity },
-    });
+    // const existItem = cart.cartItems.find((x) => x._id === products._id);
+    // const quantity = existItem ? existItem.quantity + 1 : 1;
+    // const { data } = await axios.get(`/api/products/${products._id}`);
+    // console.log(data);
+    // if (data.countInStock < quantity) {
+    //   window.alert("Sorry. Product is out of stock");
+    //   return;
+    // }
+    // dispatch({
+    //   type: "CART_ADD_ITEM",
+    //   payload: { ...products, quantity: quantity },
+    // });
+    dispatch(addToCart(cart, products, 1));
+    console.log(cart);
   };
   return (
     <div>
@@ -77,28 +62,28 @@ export default function ProductScreen() {
             <Col md={6}>
               <img
                 className='img-large'
-                src={product.image}
-                alt={product.name}
+                src={products.image}
+                alt={products.name}
               ></img>
             </Col>
             <Col md={3}>
               <ListGroup>
                 <ListGroup.Item>
                   <Helmet>
-                    <title>{product.name}</title>
+                    <title>{products.name}</title>
                   </Helmet>
 
-                  <h1>{product.name}</h1>
+                  <h1>{products.name}</h1>
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Rating
-                    rating={product.rating}
-                    numReviews={product.numReviews}
+                    rating={products.rating}
+                    numReviews={products.numReviews}
                   ></Rating>{" "}
                 </ListGroup.Item>
-                <ListGroup.Item>Price : RM {product.price}</ListGroup.Item>
+                <ListGroup.Item>Price : RM {products.price}</ListGroup.Item>
                 <ListGroup.Item>
-                  Description:<p>{product.description}</p>
+                  Description:<p>{products.description}</p>
                 </ListGroup.Item>
               </ListGroup>
             </Col>
@@ -109,14 +94,14 @@ export default function ProductScreen() {
                     <ListGroup.Item>
                       <Row>
                         <Col>Price</Col>
-                        <Col>RM {product.price}</Col>
+                        <Col>RM {products.price}</Col>
                       </Row>
                     </ListGroup.Item>
                     <ListGroup.Item>
                       <Row>
                         <Col>Status</Col>
                         <Col>
-                          {product.countStock > 0 ? (
+                          {products.countStock > 0 ? (
                             <Badge bg='success'>In Stock</Badge>
                           ) : (
                             <Badge bg='danger'>Out of stock</Badge>
@@ -124,7 +109,7 @@ export default function ProductScreen() {
                         </Col>
                       </Row>
                     </ListGroup.Item>
-                    {product.countStock > 0 && (
+                    {products.countStock > 0 && (
                       <div className='d-grid'>
                         <Button
                           variant='primary'

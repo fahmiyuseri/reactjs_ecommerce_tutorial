@@ -1,59 +1,48 @@
 import { createContext, useReducer } from "react";
+import { applyMiddleware, combineReducers, createStore, compose } from "redux";
+import thunk from "redux-thunk";
+
 import logger from "use-reducer-logger";
+import cartReducer from "./reducer/cartReducer";
+import { productDetailReducer } from "./reducer/productDetailReducer";
+import { productListReducer } from "./reducer/productListReducer";
+import { userSigninReducer } from "./reducer/userReducers";
 
 export const Store = createContext();
+
 const initialState = {
+  userSignin: {
+    userInfo: localStorage.getItem("userInfo")
+      ? JSON.parse(localStorage.getItem("userInfo"))
+      : null,
+  },
   cart: {
     cartItems: localStorage.getItem("cartItems")
       ? JSON.parse(localStorage.getItem("cartItems"))
       : [],
+    shippingAddress: localStorage.getItem("shippingAddress")
+      ? JSON.parse(localStorage.getItem("shippingAddress"))
+      : {},
+    paymentMethod: "PayPal",
+    show: false,
   },
-  show: false,
 };
-const reducer = (state, action) => {
-  switch (action.type) {
-    case "TOOGLE_SHOW": {
-      console.log(action.payload.show);
-      return { ...state, show: action.payload.show };
-    }
-    case "TOOGLE_CLOSE": {
-      console.log(action.payload.show);
-      return { ...state, show: true };
-    }
-    case "CART_ADD_ITEM": {
-      const newItem = action.payload;
-      const existItem = state.cart.cartItems.find(
-        (item) => item._id === newItem._id
-      );
-      const cartItems = existItem
-        ? state.cart.cartItems.map((item) =>
-            item._id === existItem._id ? newItem : item
-          )
-        : [...state.cart.cartItems, newItem];
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+const reducer = combineReducers({
+  userSignin: userSigninReducer,
+  cart: cartReducer,
+  productList: productListReducer,
+  productDetail: productDetailReducer,
+});
+const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(
+  reducer,
+  initialState,
+  composeEnhancer(applyMiddleware(thunk))
+);
+export default store;
+// export function StoreProvider(props) {
+//   const [state, dispatch] = useReducer(logger(reducer), initialState);
+//   const value = { state, dispatch };
+//   return <Store.Provider value={value}>{props.children}</Store.Provider>;
 
-      return { ...state, cart: { ...state.cart, cartItems } };
-    }
-    //add to cart
-
-    case "CART_REMOVE_ITEM": {
-      //remove item cart
-
-      const curItem = action.payload;
-      const cartItems = state.cart.cartItems.filter(
-        (item) => item._id !== curItem._id
-      );
-      localStorage.setItem("cartItems", JSON.stringify(cartItems));
-
-      return { ...state, cart: { ...state.cart, cartItems } };
-    }
-    default:
-      return state;
-  }
-};
-
-export function StoreProvider(props) {
-  const [state, dispatch] = useReducer(logger(reducer), initialState);
-  const value = { state, dispatch };
-  return <Store.Provider value={value}>{props.children}</Store.Provider>;
-}
+//}

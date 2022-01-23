@@ -15,17 +15,23 @@ import CartScreen from "./screen/CartScreen";
 import SignInScreen from "./screen/SigninScreen";
 import { Button } from "react-bootstrap";
 import CartBody from "./screen/CartBody";
+import { useDispatch, useSelector } from "react-redux";
+
 function App() {
-  const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { cart, show } = state;
+  const cart = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
+
+  console.log(cart);
+  //const { state, dispatch: ctxDispatch } = useContext(Store);
+  //const { cart, show } = state;
   const toogleShow = async () => {
-    ctxDispatch({
+    dispatch({
       type: "TOOGLE_SHOW",
       payload: { show: true },
     });
   };
   const toogleClose = async () => {
-    ctxDispatch({
+    dispatch({
       type: "TOOGLE_SHOW",
       payload: { show: false },
     });
@@ -50,8 +56,8 @@ function App() {
               </Nav>
             </Container>
           </Navbar>
-          console.log({show})
-          <Offcanvas show={show} onHide={toogleClose} placement='end'>
+          console.log({cart.show})
+          <Offcanvas show={cart.show} onHide={toogleClose} placement='end'>
             <Offcanvas.Header closeButton>
               <Offcanvas.Title>Shopping Cart</Offcanvas.Title>
             </Offcanvas.Header>

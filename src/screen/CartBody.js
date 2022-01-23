@@ -10,43 +10,43 @@ import MessageBox from "../components/MessageBox";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Stack from "react-bootstrap/Stack";
+import { useSelector } from "react-redux";
 
 export default function CartBody() {
   const navigate = useNavigate();
-  const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { cart } = state;
-  const addToCartHandler = (item) => async () => {
-    const existItem = cart.cartItems.find((x) => x._id === item._id);
-    const quantity = existItem ? existItem.quantity + 1 : 1;
-    // const { data } = await axios.get(`/api/products/${product._id}`);
-    // if (data.countInStock < quantity) {
-    //   window.alert("Sorry. Product is out of stock");
-    //   return;
-    // }
-    ctxDispatch({
-      type: "CART_ADD_ITEM",
-      payload: { ...item, quantity: quantity },
-    });
-  };
-  const minusItemCartHandler = (item) => async () => {
-    const existItem = cart.cartItems.find((x) => x._id === item._id);
-    const quantity = existItem ? existItem.quantity - 1 : 1;
-    // const { data } = await axios.get(`/api/products/${product._id}`);
-    // if (data.countInStock < quantity) {
-    //   window.alert("Sorry. Product is out of stock");
-    //   return;
-    // }
-    ctxDispatch({
-      type: "CART_ADD_ITEM",
-      payload: { ...item, quantity: quantity },
-    });
-  };
+  const cart = useSelector((state) => state.cart);
+  // const addToCartHandler = (item) => async () => {
+  //   const existItem = cart.cartItems.find((x) => x._id === item._id);
+  //   const quantity = existItem ? existItem.quantity + 1 : 1;
+  //   // const { data } = await axios.get(`/api/products/${product._id}`);
+  //   // if (data.countInStock < quantity) {
+  //   //   window.alert("Sorry. Product is out of stock");
+  //   //   return;
+  //   // }
+  //   ctxDispatch({
+  //     type: "CART_ADD_ITEM",
+  //     payload: { ...item, quantity: quantity },
+  //   });
+  // };
+  // const minusItemCartHandler = (item) => async () => {
+  //   const existItem = cart.cartItems.find((x) => x._id === item._id);
+  //   const quantity = existItem ? existItem.quantity - 1 : 1;
+  //   // const { data } = await axios.get(`/api/products/${product._id}`);
+  //   // if (data.countInStock < quantity) {
+  //   //   window.alert("Sorry. Product is out of stock");
+  //   //   return;
+  //   // }
+  //   ctxDispatch({
+  //     type: "CART_ADD_ITEM",
+  //     payload: { ...item, quantity: quantity },
+  //   });
+  // };
 
   const removeItem = (item) => async () => {
-    ctxDispatch({
-      type: "CART_REMOVE_ITEM",
-      payload: { ...item, quantity: 1 },
-    });
+    // ctxDispatch({
+    //   type: "CART_REMOVE_ITEM",
+    //   payload: { ...item, quantity: 1 },
+    // });
   };
   const checkoutHandler = async () => {
     navigate("/signin?redirect=/shipping");
@@ -62,7 +62,7 @@ export default function CartBody() {
           ) : (
             <ListGroup>
               {cart.cartItems.map((item) => (
-                <ListGroupItem>
+                <ListGroupItem key={item._id}>
                   <Stack direction='horizontal'>
                     <img
                       src={item.image}
@@ -80,7 +80,7 @@ export default function CartBody() {
                           <Button
                             variant='light'
                             disabled={item.quantity === 1}
-                            onClick={minusItemCartHandler(item)}
+                            onClick={removeItem(item)}
                           >
                             {" "}
                             <i className='fas fa-minus-circle'></i>
@@ -89,7 +89,7 @@ export default function CartBody() {
                           <Button
                             variant='light'
                             disabled={item.quantity === item.countInStock}
-                            onClick={addToCartHandler(item)}
+                            onClick={removeItem(item)}
                           >
                             <i className='fas fa-plus-circle'></i>
                           </Button>{" "}
