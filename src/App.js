@@ -22,6 +22,8 @@ import SignInScreen from "./screen/SigninScreen";
 import { Button } from "react-bootstrap";
 import CartBody from "./screen/CartBody";
 import { useDispatch, useSelector } from "react-redux";
+import RegisterScreen from "./screen/RegisterScreen";
+import ShippingScreen from "./screen/ShippingScreen";
 function App() {
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
@@ -47,7 +49,7 @@ function App() {
     <BrowserRouter>
       <div className='d-flex flex-column site-container'>
         <header>
-          <Navbar bg='dark' variant='dark'>
+          <Navbar bg='dark' variant='dark' className='navbar-radius'>
             <Container>
               <LinkContainer to='/'>
                 <Navbar.Brand>amazonn</Navbar.Brand>
@@ -88,6 +90,8 @@ function App() {
               <Route path='/product/:slug' element={<ProductScreen />}></Route>
               <Route path='/cart' element={<CartScreen />}></Route>
               <Route path='/' element={<HomeScreen />}></Route>
+              <Route path='signup/' element={<RegisterScreen />}></Route>
+              <Route path='shipping/' element={<ShippingScreen />}></Route>
             </Routes>
           </Container>
         </main>

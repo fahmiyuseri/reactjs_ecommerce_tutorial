@@ -7,18 +7,14 @@ import {
   USER_SIGN_SIGNOUT,
   USER_SIGN_SUCCESS,
 } from "../constant/userConstants";
-
-export const userSigninReducer = (state = { loading: true }, action) => {
+export const userRegisterReducer = (state = { loading: true }, action) => {
   switch (action.type) {
-    case USER_SIGN_REQUEST:
+    case USER_REGISTER_REQUEST:
       return { ...state, loading: true };
-    case USER_SIGN_SUCCESS:
+    case USER_REGISTER_SUCCESS:
       return { ...state, loading: false, userInfo: action.payload };
-    case USER_SIGN_FAIL:
+    case USER_REGISTER_FAIL:
       return { ...state, loading: false, error: action.payload };
-    case USER_SIGN_SIGNOUT:
-      return {};
-
     default:
       return state;
   }

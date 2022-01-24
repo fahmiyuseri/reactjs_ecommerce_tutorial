@@ -32,21 +32,9 @@ export default function ProductScreen() {
     dispatch(singleProduct(slug));
   }, [dispatch]);
   console.log(productDetail);
-  // const { state, dispatch: ctxDispatch } = useContext(Store);
-  // const { cart } = state;
+
   const addToCartHandler = async () => {
-    // const existItem = cart.cartItems.find((x) => x._id === products._id);
-    // const quantity = existItem ? existItem.quantity + 1 : 1;
-    // const { data } = await axios.get(`/api/products/${products._id}`);
-    // console.log(data);
-    // if (data.countInStock < quantity) {
-    //   window.alert("Sorry. Product is out of stock");
-    //   return;
-    // }
-    // dispatch({
-    //   type: "CART_ADD_ITEM",
-    //   payload: { ...products, quantity: quantity },
-    // });
+
     dispatch(addToCart(cart, products, 1));
     console.log(cart);
   };

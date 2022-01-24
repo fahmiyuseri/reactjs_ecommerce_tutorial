@@ -1,2 +1,2 @@
--learn router
--learn redux
+import font awesome
+create star for review
